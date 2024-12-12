@@ -14,6 +14,7 @@ return{
                     "bashls",
                     "ast_grep",
                     "gopls",
+                    "rust_analyzer",
 
                 },
                 automatic_installation = true,
