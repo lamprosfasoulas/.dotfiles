@@ -5,6 +5,7 @@
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 #turns off login warning
 export BASH_SILENCE_DEPRECATION_WARNING=1

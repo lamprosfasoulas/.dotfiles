@@ -1,5 +1,5 @@
 font-family = FiraCode Nerd Font Mono
-font-size = 10
+font-size = 14
 
 theme = Everforest Dark - Hard
 
@@ -8,5 +8,7 @@ cursor-style-blink = false
 
 # window-decoration = false
 window-theme = ghostty
+window-height = 35
+window-width = 140
 
 keybind = ctrl+[=esc:

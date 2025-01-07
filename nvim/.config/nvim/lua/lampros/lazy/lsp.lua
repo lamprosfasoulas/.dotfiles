@@ -15,6 +15,7 @@ return{
                     "ast_grep",
                     "gopls",
                     "rust_analyzer",
+                    "ansiblels"
 
                 },
                 automatic_installation = true,
@@ -40,6 +41,9 @@ return{
                 capabilities = capabilities
             })
             lspconfig.gopls.setup({
+                capabilities = capabilities
+            })
+            lspconfig.ansiblels.setup({
                 capabilities = capabilities
             })
     end
