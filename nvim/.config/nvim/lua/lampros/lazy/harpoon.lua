@@ -9,7 +9,20 @@ return {
         config = function()
             local harpoon = require("harpoon")
 
-            harpoon:setup({})
+            harpoon.setup({
+                global_settings = {
+                    -- saves the harpoon file upon every change. disabling is unrecommended.
+                    save_on_change = true,
+                    -- filetypes that you want to prevent from adding to the harpoon list menu.
+                    excluded_filetypes = { "harpoon" },
+                    -- set marks specific to each git branch inside git repository
+                    mark_branch = false,
+                    -- enable tabline with harpoon marks
+                    tabline = true,
+                    tabline_prefix = "   ",
+                    tabline_suffix = "   ",
+                }
+            })
 
             vim.keymap.set("n", "<leader>A", function() harpoon:list():prepend() end)
             vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)

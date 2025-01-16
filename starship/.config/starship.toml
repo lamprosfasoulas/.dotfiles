@@ -1,7 +1,7 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = '$python$character$directory$git_branch ✘ '
+format = '$python$character$directory$git_branch✘ '
 
 # Inserts a blank line between shell prompts
 add_newline = false
@@ -14,7 +14,7 @@ error_symbol = '[→](bold red)'
 # Disable the package module, hiding it from the prompt completely
 
 [git_branch]
-format = '[git:\([$branch](bold red)\)]($style)'
+format = '[git:\([$branch](bold red)\) ]($style)'
 symbol = ''
 style = 'bold yellow'
 
@@ -23,4 +23,4 @@ disabled = true
 
 [python]
 style = 'bold green'
-format = '[(🐍\($virtualenv\))]($style)'
+format = '[(🐍\($virtualenv\) )]($style)'
