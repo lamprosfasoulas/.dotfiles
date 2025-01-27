@@ -34,3 +34,4 @@ bind '"\C-f":"tmux-sessionizer\n"'
 eval "$(starship init bash)"
 eval "$(fzf --bash)"
 
+. "$HOME/.cargo/env"

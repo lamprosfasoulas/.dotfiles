@@ -16,6 +16,7 @@ return {
                     "gopls",
                     "rust_analyzer",
                     "ansiblels",
+                    "yamlls",
 
                 },
                 automatic_installation = true,
@@ -60,6 +61,10 @@ return {
                         },
                     },
                 },
+            })
+            lspconfig.yamlls.setup({
+                cmd = { "yaml-language-server", "--stdio" },
+                filetypes = { "yaml" },
             })
     end
     },

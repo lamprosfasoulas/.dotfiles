@@ -13,3 +13,4 @@ window-width = 140
 
 
 keybind = ctrl+[=esc:
+macos-option-as-alt = true
