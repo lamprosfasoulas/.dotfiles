@@ -10,10 +10,10 @@ return{
             "rafamadriz/friendly-snippets"
         }
     },
-        --]]
     {
         "github/copilot.vim",
     },
+        --]]
     {
     "hrsh7th/nvim-cmp",
         event = "InsertEnter",
