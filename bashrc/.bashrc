@@ -16,9 +16,9 @@ export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 
 #turns on ls coloring
 export CLICOLOR=1
-#alias ls='ls -G'
+#export LSCOLORS=$(LS_COLORS=ExGxBxDxCxEgEdxbxgxcxd)
+alias ls='gls --color=always'
 #alias ll='ls -lG'
-export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 #sets color for prompt
 export GPG_TTY=$(tty)
 
