@@ -15,6 +15,8 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- vim.keymap.set("n", "zz", "ZZ")
 -- vim.keymap.set("n", "zq", "ZQ")
 vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set("n","<leader>td","<cmd>split todo.md<CR>")
+vim.keymap.set("n","td",":if expand('%:t') == 'todo.md' | wq | endif<CR>",{noremap = true, silent = true })
 
 
 vim.keymap.set({"n","v"}, "<leader>d",[["_d]])

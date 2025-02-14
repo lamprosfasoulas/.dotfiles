@@ -15,8 +15,9 @@ return {
                     "ast_grep",
                     "gopls",
                     "rust_analyzer",
-                    "ansiblels",
                     "yamlls",
+                    "docker_compose_language_service",
+                    "dockerls",
 
                 },
                 automatic_installation = true,
@@ -44,27 +45,44 @@ return {
             lspconfig.gopls.setup({
                 capabilities = capabilities
             })
-            lspconfig.ansiblels.setup({
-                cmd = { "ansible-language-server", "--stdio" },
-                filetypes = { "yaml" },
-                root_dir = require('lspconfig').util.find_git_ancestor,
-                settings = {
-                    ansible = {
-                        ansible = {
-                            path = "ansible", -- Optional, specify custom ansible binary if needed
-                        },
-                        executionEnvironment = {
-                            enabled = false, -- Set to true if using an execution environment
-                        },
-                        python = {
-                            interpreterPath = "python3", -- Use the correct Python interpreter
-                        },
-                    },
-                },
+            lspconfig.rust_analyzer.setup({
+                capabilities = capabilities
             })
+            lspconfig.docker_compose_language_service.setup({
+                capabilities = capabilities
+            })
+            lspconfig.dockerls.setup({
+                capabilities = capabilities
+            })
+--            lspconfig.ansiblels.setup({
+--                filetypes = { "yaml" },
+--                --root_dir = require('lspconfig').util.find_git_ancestor,
+--                settings = {
+--                    ansible = {
+--                        ansible = {
+--                            path = "~/work/it-ansible/ansible.venv/bin/ansible", -- Optional, specify custom ansible binary if needed
+--                        },
+--                        executionEnvironment = {
+--                            enabled = false, -- Set to true if using an execution environment
+--                        },
+--                        python = {
+--                            interpreterPath = "~/work/it-ansible/ansible.venv/bin/python", -- Use the correct Python interpreter
+--                        },
+--                    },
+--                },
+--            })
             lspconfig.yamlls.setup({
                 cmd = { "yaml-language-server", "--stdio" },
                 filetypes = { "yaml" },
+                settings ={
+                    yaml = {
+                        schemas = {
+                            ["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.yml",
+                            ["https://json.schemastore.org/github-action.json"] = ".github/action.yml",
+                            ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = ".gitlab-ci.yml"
+                        }
+                    }
+                }
             })
     end
     },
