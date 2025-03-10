@@ -33,6 +33,8 @@ alias sftpd='sftp lampros@desktop'
 alias wakedesk='wakeonlan -i 10.17.17.255 b8:2a:72:b0:df:15'
 
 alias work='source ansible.venv/bin/activate'
+alias k='kubectl'
+alias kd='kubectl describe'
 
 bind '"\C-f":"tmux-sessionizer\n"'
 

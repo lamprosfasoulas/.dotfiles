@@ -18,6 +18,7 @@ return {
                     "yamlls",
                     "docker_compose_language_service",
                     "dockerls",
+                    "ts_ls",
 
                 },
                 automatic_installation = true,
@@ -54,6 +55,12 @@ return {
             lspconfig.dockerls.setup({
                 capabilities = capabilities
             })
+            lspconfig.ts_ls.setup({
+                capabilities = capabilities
+            })
+            lspconfig.htmx.setup({
+                capabilities = capabilities
+            })
 --            lspconfig.ansiblels.setup({
 --                filetypes = { "yaml" },
 --                --root_dir = require('lspconfig').util.find_git_ancestor,
@@ -79,7 +86,9 @@ return {
                         schemas = {
                             ["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.yml",
                             ["https://json.schemastore.org/github-action.json"] = ".github/action.yml",
-                            ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = ".gitlab-ci.yml"
+                            ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {".gitlab-ci.yml", "ci/*.yml"},
+                            ["https://json.schemastore.org/kubernetes"] = "/*.k8s.yml",
+                            ["kubernetes"] = "/*.yml",
                         }
                     }
                 }
