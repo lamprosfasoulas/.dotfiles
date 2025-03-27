@@ -87,8 +87,7 @@ return {
                             ["https://json.schemastore.org/github-workflow.json"] = ".github/workflows/*.yml",
                             ["https://json.schemastore.org/github-action.json"] = ".github/action.yml",
                             ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {".gitlab-ci.yml", "ci/*.yml"},
-                            ["https://json.schemastore.org/kubernetes"] = "/*.k8s.yml",
-                            ["kubernetes"] = "/*.yml",
+                            ["kubernetes"] = "kubernetes/**/*.yaml",
                         }
                     }
                 }
