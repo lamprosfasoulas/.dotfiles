@@ -34,32 +34,45 @@ return {
     config = function()
             local lspconfig = require("lspconfig")
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            local on_attach = function (_ , bufnr)
+                local opts = { noremap = true, silent = true, buffer = bufnr }
+                vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+            end
             lspconfig.lua_ls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.bashls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.ast_grep.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.gopls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.rust_analyzer.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.docker_compose_language_service.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.dockerls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.ts_ls.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
             lspconfig.htmx.setup({
-                capabilities = capabilities
+                capabilities = capabilities,
+                on_attach = on_attach,
             })
 --            lspconfig.ansiblels.setup({
 --                filetypes = { "yaml" },
