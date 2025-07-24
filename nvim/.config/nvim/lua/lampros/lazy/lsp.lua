@@ -19,6 +19,9 @@ return {
                     "docker_compose_language_service",
                     "dockerls",
                     "ts_ls",
+                    "html",
+                    "tailwindcss",
+                    "terraformls",
 
                 },
                 automatic_installation = true,
@@ -37,43 +40,72 @@ return {
             local on_attach = function (_ , bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
                 vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+                vim.keymap.set('n', 'L', vim.lsp.buf.implementation, opts)
             end
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.bashls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.ast_grep.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.gopls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.rust_analyzer.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.docker_compose_language_service.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.dockerls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.ts_ls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
             lspconfig.htmx.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })
+
+            lspconfig.terraformls.setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
+            lspconfig.html.setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
+            lspconfig.tailwindcss.setup({
+                filetypes = {
+                    "html",
+                    "tmpl",
+                },
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
 --            lspconfig.ansiblels.setup({
 --                filetypes = { "yaml" },
 --                --root_dir = require('lspconfig').util.find_git_ancestor,
