@@ -20,7 +20,9 @@ return {
                     "html",
                     "tailwindcss",
                     "terraformls",
-
+                    "intelephense",
+                    "pyright",
+                    "jdtls",
                 },
                 automatic_installation = true,
             })
@@ -29,16 +31,18 @@ return {
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-        },
         config = function()
             local lspconfig = require("lspconfig")
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            --local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
             local on_attach = function(_, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
                 vim.keymap.set('n', 'L', vim.lsp.buf.implementation, opts)
             end
+            lspconfig.pyright.setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
             lspconfig.lua_ls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
@@ -54,10 +58,10 @@ return {
                 on_attach = on_attach,
             })
 
-            lspconfig.gopls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
+            -- lspconfig.gopls.setup({
+            --     capabilities = capabilities,
+            --     on_attach = on_attach,
+            -- })
 
             lspconfig.rust_analyzer.setup({
                 capabilities = capabilities,
@@ -90,6 +94,16 @@ return {
             })
 
             lspconfig.html.setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
+            lspconfig.intelephense.setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+            })
+
+            lspconfig.jdtls.setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
             })

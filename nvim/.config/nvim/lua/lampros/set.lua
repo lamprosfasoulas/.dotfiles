@@ -1,19 +1,21 @@
-vim.opt.guicursor = ""
-vim.opt.nu = true
-vim.opt.relativenumber = true
+local opt = vim.opt
 
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
+opt.guicursor = ""
+opt.nu = true
+opt.relativenumber = true
 
-vim.opt.smartindent = true
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.shiftwidth = 4
+opt.expandtab = true
 
-vim.opt.wrap = false
+opt.smartindent = true
 
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
+opt.wrap = false
 
-vim.opt.scrolloff = 8
-vim.opt.termguicolors = true
-vim.opt.colorcolumn = "80"
+opt.hlsearch = false
+opt.incsearch = true
+
+opt.scrolloff = 8
+opt.termguicolors = true
+opt.colorcolumn = "80"

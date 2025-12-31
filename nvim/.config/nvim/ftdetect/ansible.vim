@@ -4,5 +4,5 @@ autocmd BufRead,BufNewFile */tasks/*.yml,*/tasks/*.yaml set filetype=yaml.ansibl
 autocmd BufRead,BufNewFile */templates/*.yml,*/templates/*.yaml set filetype=yaml.ansible
 autocmd BufRead,BufNewFile */vars/*.yml,*/vars/*.yaml set filetype=yaml.ansible
 autocmd BufRead,BufNewFile */host_vars/* set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */group_vars/ set filetype=yaml.ansible
+autocmd BufRead,BufNewFile */group_vars/* set filetype=yaml.ansible
 

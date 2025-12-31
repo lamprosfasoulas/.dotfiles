@@ -4,6 +4,10 @@ notify(){
     printf '\033Ptmux;\033\033]777;notify;%s;%s\033\\' "${title}" "${message}"
 }
 
+curljq() {
+    curl "$@" | jq
+}
+
 [[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
 . ~/.git-completion.bash
 
@@ -28,21 +32,23 @@ export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 #turns on ls coloring
 export CLICOLOR=1
 #export LSCOLORS=$(LS_COLORS=ExGxBxDxCxEgEdxbxgxcxd)
-alias ls='gls --color=always'
 #alias ll='ls -lG'
 #sets color for prompt
 export GPG_TTY=$(tty)
 
 alias vim=nvim
 alias ivm=nvim
+alias gs='git status'
+alias gf='git fetch'
 alias tmux='tmux -u'
 alias sftpd='sftp lampros@desktop'
 alias wakedesk='wakeonlan -i 10.17.17.255 b8:2a:72:b0:df:15'
 
 alias work='source ~/work/it-ansible/ansible.venv/bin/activate'
-alias setproxy='export HTTP_PROXY=socks5://localhost:1080 HTTPS_PROXY=socks5://localhost:1080'
-alias unsetproxy='unset HTTP_PROXY HTTPS_PROXY'
+alias setproxy='export http_proxy=socks5://localhost:1080 https_proxy=socks5://localhost:1080 no_proxy=localhost,127.0.0.1'
+alias unsetproxy='unset http_proxy https_proxy no_proxy'
 alias k='kubectl'
+alias kc='kubectl config'
 alias kd='kubectl describe'
 
 alias calicoctl='calicoctl --allow-version-mismatch'

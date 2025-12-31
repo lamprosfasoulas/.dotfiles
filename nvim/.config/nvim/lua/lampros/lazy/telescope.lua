@@ -30,7 +30,9 @@ return {
 	    vim.keymap.set('n','<leader>pws', function()
 		    builtin.grep_string({ search = vim.fn.expand("<cword>")})
 		end)
-        vim.keymap.set('n','<leader>vh',builtin.help_tags,{})
+        vim.keymap.set('n','<leader>ph',builtin.help_tags,{})
+
+        -- require("config.telescope.multigrep").setup()
 
 	end
 }
