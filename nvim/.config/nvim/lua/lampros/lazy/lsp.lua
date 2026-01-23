@@ -34,90 +34,102 @@ return {
         config = function()
             local lspconfig = require("lspconfig")
             --local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            --
             local capabilities = require('blink.cmp').get_lsp_capabilities()
+
             local on_attach = function(_, bufnr)
                 local opts = { noremap = true, silent = true, buffer = bufnr }
                 vim.keymap.set('n', 'L', vim.lsp.buf.implementation, opts)
             end
-            lspconfig.pyright.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-            lspconfig.lua_ls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
 
-            lspconfig.bashls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
+            local servers = {
+            "pyright",
+            "lua_ls",
+            "bashls",
+            "ast_grep",
+            "rust_analyzer",
+            "docker_compose_language_service",
+            "dockerls",
+            "ts_ls",
+            "htmx",
+            "terraformls",
+            "html",
+            "intelephense",
+            "jdtls",
+            "tailwindcss",
+            "ansiblels",
+            "yamlls",
+            }
+
+            local default_setup = function(server)
+                vim.lsp.config(server, {
+                    capabilities = capabilities,
+                    on_attach = on_attach,
+                })
+            end
+
+            for _, lsp in ipairs(servers) do
+                default_setup(lsp)
+            end
+
+				--         vim.lsp.config('pyright', {
+				--             capabilities = capabilities,
+				--             on_attach = on_attach,
+				--         })
+				--         vim.lsp.config('lua_ls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('bashls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('ast_grep', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('rust_analyzer', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('docker_compose_language_service', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('dockerls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('ts_ls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('htmx', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('terraformls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('html', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('intelephense', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+				--         vim.lsp.config('jdtls', {
+				-- capabilities = capabilities,
+				-- on_attach = on_attach
+				--         })
+            vim.lsp.config('tailwindcss', {
+				capabilities = capabilities,
+				on_attach = on_attach,
+                filetypes = { "html", "tmpl" },
             })
-
-            lspconfig.ast_grep.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            -- lspconfig.gopls.setup({
-            --     capabilities = capabilities,
-            --     on_attach = on_attach,
-            -- })
-
-            lspconfig.rust_analyzer.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.docker_compose_language_service.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.dockerls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.ts_ls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.htmx.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.terraformls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.html.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.intelephense.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.jdtls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.tailwindcss.setup({
-                filetypes = {
-                    "html",
-                    "tmpl",
-                },
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
-
-            lspconfig.ansiblels.setup({
+            vim.lsp.config('ansiblels', {
                 capabilities = capabilities,
                 on_attach = on_attach,
                 filetypes = { "yaml.ansible" },
@@ -132,25 +144,7 @@ return {
                     },
                 },
             })
-
-            --            lspconfig.ansiblels.setup({
-            --                filetypes = { "yaml" },
-            --                --root_dir = require('lspconfig').util.find_git_ancestor,
-            --                settings = {
-            --                    ansible = {
-            --                        ansible = {
-            --                            path = "~/work/it-ansible/ansible.venv/bin/ansible", -- Optional, specify custom ansible binary if needed
-            --                        },
-            --                        executionEnvironment = {
-            --                            enabled = false, -- Set to true if using an execution environment
-            --                        },
-            --                        python = {
-            --                            interpreterPath = "~/work/it-ansible/ansible.venv/bin/python", -- Use the correct Python interpreter
-            --                        },
-            --                    },
-            --                },
-            --            })
-            lspconfig.yamlls.setup({
+            vim.lsp.config('yamlls', {
                 cmd = { "yaml-language-server", "--stdio" },
                 filetypes = { "yaml" },
                 settings = {
@@ -165,32 +159,5 @@ return {
                 }
             })
         end
-    },
-    -- LSP servers and clients communicate which features they support through "capabilities".
-    --  By default, Neovim supports a subset of the LSP specification.
-    --  With blink.cmp, Neovim has *more* capabilities which are communicated to the LSP servers.
-    --  Explanation from TJ: https://youtu.be/m8C0Cq9Uv9o?t=1275
-    --
-    -- This can vary by config, but in general for nvim-lspconfig:
-
-    --[[{
-        'neovim/nvim-lspconfig',
-        dependencies = { 'saghen/blink.cmp' },
-
-        -- example using `opts` for defining servers
-        opts = {
-            servers = {
-                lua_ls = {},
-                gopls = {}
-            }
-        },
-        config = function()
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
-            local lspconfig = require('lspconfig')
-
-            lspconfig['lua_ls'].setup({ capabilities = capabilities })
-            lspconfig['gopls'].setup({ capabilities = capabilities })
-        end
-    },
-    --]]
+    }
 }

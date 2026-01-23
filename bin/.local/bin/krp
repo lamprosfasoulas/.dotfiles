@@ -1,0 +1,86 @@
+#!/bin/bash
+
+. errors.func
+. krp.func
+
+if ! command -v kubectl &> /dev/null; then
+    logError "Required binary kubectl not present"
+    exit 1
+fi
+
+
+context=$(fzf --tmux --prompt "Cluster> " < <(getContexts))
+if [[ -z $context ]]; then
+    logError "No context selected"
+    exit 1
+fi
+
+if contextRequiresProxy "$context" && notInMngmSubnet && proxyNotEnabled; then
+        logError "No Proxy Enabled"
+        exit 1
+fi
+
+if contextRequiresProxy "$context"; then
+    proxyHost=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f1)
+    proxyPort=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f2)
+    if ! nc -z "$proxyHost" "$proxyPort" &> /dev/null; then
+        logError "Proxy Unreachable"
+        exit 1
+    fi
+fi
+
+# selectedNamespace=$(fzf <<< "${namespaces[@]}")
+selectedNamespace=$(fzf \
+    --tmux \
+    --prompt "Namespace> " \
+    < <(getNamespaces))
+if [[ -z $selectedNamespace ]]; then
+    logError "No namespace selected"
+    exit 1
+fi
+
+selectedContainer=$(fzf \
+    --tmux \
+    --prompt "Container> " \
+    < <(getContainers))
+if [[ -z $selectedContainer ]]; then
+    logError "No image selected"
+    exit 1
+fi
+
+image=$(getImage "$selectedContainer")
+
+# getOptions export variables that will be
+# interpolated in the init script for each
+# container
+getOptions "$selectedContainer"
+
+command=$(getImageInitCommand  "$selectedContainer")
+
+
+name="lfasoula-${selectedContainer}-$(date | sha256sum | cut -c1-5)"
+
+cmd=(kubectl
+    run
+    "$name"
+    --image="$image"
+    --namespace "$selectedNamespace"
+    --rm -it
+    --restart=Never
+    --context "$context"
+)
+
+if [[ -n $command ]]; then
+    cmd+=("--command" "--" "ash" "-c" "$command")
+else
+    cmd+=("--" "ash")
+fi
+
+"${cmd[@]}"
+
+# kubectl run "$name" \
+#     --image="$image" \
+#     --namespace "$namespace" \
+#     --rm -it \
+#     --restart=Never \
+#     -- sh

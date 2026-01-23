@@ -1,0 +1,60 @@
+#!/bin/bash
+
+. krp.func
+
+if ! command -v kubectl &> /dev/null; then
+    logError "Required binary kubectl not present"
+    exit 1
+fi
+
+
+context=$(fzf --tmux --prompt "Cluster> " < <(getContexts))
+if [[ -z $context ]]; then
+    logError "No context selected"
+    exit 1
+fi
+
+if contextRequiresProxy "$context" && notInMngmSubnet && proxyNotEnabled; then
+        logError "No Proxy Enabled"
+        exit 1
+fi
+
+if contextRequiresProxy "$context"; then
+    proxyHost=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f1)
+    proxyPort=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f2)
+    if ! nc -z "$proxyHost" "$proxyPort" &> /dev/null; then
+        logError "Proxy Unreachable"
+        exit 1
+    fi
+fi
+
+# selectedNamespace=$(fzf <<< "${namespaces[@]}")
+selectedNamespace=$(fzf \
+    --tmux \
+    --prompt "Namespace> " \
+    < <(getNamespaces))
+if [[ -z $selectedNamespace ]]; then
+    logError "No namespace selected"
+    exit 1
+fi
+
+selectedContainer=$(fzf \
+    --tmux \
+    --prompt "Container> " \
+    < <(getContainersFromContext))
+if [[ -z $selectedContainer ]]; then
+    logError "No Container selected"
+    exit 1
+fi
+
+cmd=(kubectl
+    exec
+    --namespace "$selectedNamespace"
+    -it
+    "$selectedContainer"
+    --context "$context"
+    --
+    sh
+)
+
+"${cmd[@]}"

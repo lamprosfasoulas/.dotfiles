@@ -40,6 +40,10 @@ alias vim=nvim
 alias ivm=nvim
 alias gs='git status'
 alias gf='git fetch'
+alias ff='firefox --new-tab'
+alias ffp='firefox --private-window'
+alias ls='gls --color=always'
+alias ll='gls --color=always -la'
 alias tmux='tmux -u'
 alias sftpd='sftp lampros@desktop'
 alias wakedesk='wakeonlan -i 10.17.17.255 b8:2a:72:b0:df:15'

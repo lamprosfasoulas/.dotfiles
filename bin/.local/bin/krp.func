@@ -1,0 +1,115 @@
+#!/bin/bash
+
+contextRequiresProxy() {
+    local cluster=$1
+    if [[ -z $cluster ]]; then
+            logError "Error no k8s config found"
+            exit 1
+    fi
+    case "$cluster" in
+        k8s-dev-112)
+            return 0
+            ;;
+        k8s-prod-112)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+notInMngmSubnet() {
+    local subnet
+    subnet=$(ghostname -i | cut -d. -f3)
+    if [[ $subnet != "112" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+proxyNotEnabled() {
+    [[ -z $https_proxy ]]
+}
+
+getContexts() {
+    kubectl config get-contexts -o name --no-headers
+}
+
+getContainers() {
+    local images=(
+        "alpine"
+        "mysql"
+        "myloader"
+        "openldap"
+        "maven"
+        "jjs"
+    )
+    printf "%s\n" "${images[@]}"
+}
+
+getContainersFromContext() {
+    cut -d/ -f2 < <(kubectl get pods -n "$selectedNamespace" -o name --context "$context")
+}
+
+getNamespaces() {
+    local namespaces
+    namespaces=$(kubectl get namespace \
+        --output name \
+        --context "$context" \
+        | cut -d '/' -f2)
+    printf "%s\n" "${namespaces[@]}"
+}
+
+getImage() {
+    local image=$1
+    case "$image" in
+        mysql)
+            echo "dockerhub-proxy.it.auth.gr/library/mysql:8.0"
+            return 0
+            ;;
+        openldap)
+            echo "registry3.it.auth.gr/ciops/openldap-auth:latest"
+            return 0
+            ;;
+        *)
+            echo "dockerhub-proxy.it.auth.gr/library/alpine:3.23"
+            return 0
+            ;;
+    esac
+}
+
+getImageInitCommand() {
+    local image=$1
+    envsubst <<< "$(
+        cat "$HOME/.local/bin/${image}_init" 2> /dev/null
+    )"
+
+    # case "$image" in
+    #     myloader)
+    #         cat ~/.local/bin/myloader_init
+    #         ;;
+    #     *)
+    #         ;;
+    # esac
+}
+
+getOptions() {
+    local container=$1
+    case "$container" in
+        mysql)
+            DB_HOST=pyka-mysql-haproxy.everest.svc
+            DB_USER=root
+            DB_PORT=3306
+            DB_HOST=$(whiptail --title "MySQL Setup" --inputbox "Enter Hostname:"  8 45 "$DB_HOST" 3>&1 1>&2 2>&3)
+
+            DB_PORT=$(whiptail --title "MySQL Setup" --inputbox "Enter Port:" 8 45 "$DB_PORT" 3>&1 1>&2 2>&3)
+
+            DB_USER=$(whiptail --title "MySQL Setup" --inputbox "Enter Username:" 8 45 "$DB_USER" 3>&1 1>&2 2>&3)
+
+            # DB_PASS=$(whiptail --title "MySQL Setup" --passwordbox "Enter Password:" 8 45 3>&1 1>&2 2>&3)
+            export DB_USER DB_HOST DB_PORT
+            ;;
+    esac
+}

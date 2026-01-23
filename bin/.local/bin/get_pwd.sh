@@ -1,9 +1,11 @@
 #!/bin/bash
 
-selected=$(find ~/.secrets -type f | fzf)
+secrets=$(find ~/.secrets -type f)
+
+selected=$(fzf --prompt "Select a secret > " <<< "$secrets")
 if [[ -z $selected ]]; then
-    exit 1
+    exit 0
 fi
 
-gpg -d --no-symkey-cache $selected & while [ : ]; do sleep 1; done
-echo ""
+gpg -d --no-symkey-cache "$selected" & while true; do sleep 1; done
+# echo ""
