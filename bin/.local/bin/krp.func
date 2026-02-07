@@ -7,10 +7,10 @@ contextRequiresProxy() {
             exit 1
     fi
     case "$cluster" in
-        k8s-dev-112)
+        admin@dev-112)
             return 0
             ;;
-        k8s-prod-112)
+        admin@prod-112)
             return 0
             ;;
         *)

@@ -71,9 +71,9 @@ cmd=(kubectl
 )
 
 if [[ -n $command ]]; then
-    cmd+=("--command" "--" "ash" "-c" "$command")
+    cmd+=("--command" "--" "sh" "-c" "$command")
 else
-    cmd+=("--" "ash")
+    cmd+=("--" "sh")
 fi
 
 "${cmd[@]}"

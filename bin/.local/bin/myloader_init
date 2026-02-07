@@ -1,0 +1,31 @@
+apk add --no-cache \
+    build-base \
+    cmake \
+    git \
+    glib-dev \
+    mysql-dev \
+    openssl-dev \
+    zlib-dev \
+    pcre-dev \
+    vim \
+    pkgconfig
+
+git clone https://github.com/mydumper/mydumper.git
+cd mydumper || exit
+
+git checkout v0.9.1
+git describe --tags
+
+mkdir build && cd build || exit
+cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+make
+
+make install
+
+myloader --version
+
+cat << EOF > /root/.my.cnf
+[client]
+ssl-verify-server-cert = off
+EOF

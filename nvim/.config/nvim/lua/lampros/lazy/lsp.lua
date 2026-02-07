@@ -59,6 +59,7 @@ return {
             "tailwindcss",
             "ansiblels",
             "yamlls",
+            "gopls",
             }
 
             local default_setup = function(server)
@@ -124,6 +125,25 @@ return {
 				-- capabilities = capabilities,
 				-- on_attach = on_attach
 				--         })
+                vim.lsp.config('gopls', {
+                    capabilities = capabilities,
+                    on_attach = on_attach,
+                    settings = {
+                        gopls = {
+                            -- This is the "magic" for highlighting
+                            ["ui.semanticTokens"] = true, 
+
+                            -- These help with "lacking" completions
+                            completeUnimported = true,
+                            usePlaceholders = true,
+                            staticcheck = true,
+                            analyses = {
+                                unusedparams = true,
+                            },
+                        },
+                    },
+
+                })
             vim.lsp.config('tailwindcss', {
 				capabilities = capabilities,
 				on_attach = on_attach,
