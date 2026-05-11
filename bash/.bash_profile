@@ -21,3 +21,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export CLICOLOR=1
 
+
+eval "$(/opt/homebrew/bin/brew shellenv bash)"

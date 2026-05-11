@@ -25,11 +25,23 @@ return {
             --     documentation = { auto_show = true },
             -- },
             appearance = {
-                use_nvim_cmp_as_default = true,
+                -- use_nvim_cmp_as_default = true,
                 nerd_font_variant = 'mono',
             },
 
             signature = { enabled = false },
         },
+        config = function(_, opts)
+            require('blink.cmp').setup(opts)
+
+            -- Fix :wqa errors caused by blink's nofile buffers
+            vim.api.nvim_create_autocmd('BufEnter', {
+                callback = function()
+                    if vim.bo.buftype == 'nofile' then
+                        vim.bo.bufhidden = 'wipe'
+                    end
+                end,
+            })
+        end,
     },
 }

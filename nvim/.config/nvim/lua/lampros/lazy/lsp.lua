@@ -8,163 +8,71 @@ return {
             require("mason").setup()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "lua_ls",
-                    "bashls",
-                    "ast_grep",
-                    "gopls",
-                    "rust_analyzer",
-                    "yamlls",
-                    "docker_compose_language_service",
-                    "dockerls",
-                    "ts_ls",
-                    "html",
-                    "tailwindcss",
-                    "terraformls",
-                    "intelephense",
-                    "pyright",
-                    "jdtls",
+                    "lua_ls", "bashls", "ast_grep", "gopls", "rust_analyzer",
+                    "yamlls", "docker_compose_language_service", "dockerls",
+                    "ts_ls", "html", "tailwindcss", "terraformls",
+                    "intelephense", "pyright", "jdtls", "svelte", "ansiblels",
                 },
                 automatic_installation = true,
             })
-        end
+        end,
     },
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         config = function()
-            local lspconfig = require("lspconfig")
-            --local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            --
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
 
             local on_attach = function(_, bufnr)
-                local opts = { noremap = true, silent = true, buffer = bufnr }
-                vim.keymap.set('n', 'L', vim.lsp.buf.implementation, opts)
+                vim.keymap.set("n", "L", vim.lsp.buf.implementation,
+                    { noremap = true, silent = true, buffer = bufnr })
             end
 
+            local base = { capabilities = capabilities, on_attach = on_attach }
+
+            -- Servers that need no extra config beyond base
             local servers = {
-            "pyright",
-            "lua_ls",
-            "bashls",
-            "ast_grep",
-            "rust_analyzer",
-            "docker_compose_language_service",
-            "dockerls",
-            "ts_ls",
-            "htmx",
-            "terraformls",
-            "html",
-            "intelephense",
-            "jdtls",
-            "tailwindcss",
-            "ansiblels",
-            "yamlls",
-            "gopls",
+                "pyright", "lua_ls", "bashls", "ast_grep", "rust_analyzer",
+                "docker_compose_language_service", "dockerls", "ts_ls", "htmx",
+                "terraformls", "html", "intelephense", "jdtls", "svelte",
             }
 
-            local default_setup = function(server)
-                vim.lsp.config(server, {
-                    capabilities = capabilities,
-                    on_attach = on_attach,
-                })
+            for _, server in ipairs(servers) do
+                vim.lsp.config(server, base)
             end
 
-            for _, lsp in ipairs(servers) do
-                default_setup(lsp)
-            end
-
-				--         vim.lsp.config('pyright', {
-				--             capabilities = capabilities,
-				--             on_attach = on_attach,
-				--         })
-				--         vim.lsp.config('lua_ls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('bashls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('ast_grep', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('rust_analyzer', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('docker_compose_language_service', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('dockerls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('ts_ls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('htmx', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('terraformls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('html', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('intelephense', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-				--         vim.lsp.config('jdtls', {
-				-- capabilities = capabilities,
-				-- on_attach = on_attach
-				--         })
-                vim.lsp.config('gopls', {
-                    capabilities = capabilities,
-                    on_attach = on_attach,
-                    settings = {
-                        gopls = {
-                            -- This is the "magic" for highlighting
-                            ["ui.semanticTokens"] = true, 
-
-                            -- These help with "lacking" completions
-                            completeUnimported = true,
-                            usePlaceholders = true,
-                            staticcheck = true,
-                            analyses = {
-                                unusedparams = true,
-                            },
-                        },
+            -- Servers with extra settings — vim.lsp.config deep-merges on repeated calls
+            vim.lsp.config("gopls", vim.tbl_deep_extend("force", base, {
+                settings = {
+                    gopls = {
+                        ["ui.semanticTokens"] = true,
+                        completeUnimported = true,
+                        usePlaceholders = false,
+                        staticcheck = true,
+                        analyses = { unusedparams = true },
                     },
+                },
+            }))
 
-                })
-            vim.lsp.config('tailwindcss', {
-				capabilities = capabilities,
-				on_attach = on_attach,
+            vim.lsp.config("tailwindcss", vim.tbl_deep_extend("force", base, {
                 filetypes = { "html", "tmpl" },
-            })
-            vim.lsp.config('ansiblels', {
-                capabilities = capabilities,
-                on_attach = on_attach,
+            }))
+
+            vim.lsp.config("ansiblels", vim.tbl_deep_extend("force", base, {
                 filetypes = { "yaml.ansible" },
                 settings = {
                     ansible = {
                         ansible = {
-                            path = "~/work/it-ansible/ansible.venv/bin/ansible"
+                            path = "~/work/it-ansible/ansible.venv/bin/ansible",
                         },
                         python = {
-                            activationScript = "/Users/lampros/work/it-ansible/ansible.venv/bin/activate",
+                            activationScript = "~/work/it-ansible/ansible.venv/bin/activate",
                         },
                     },
                 },
-            })
-            vim.lsp.config('yamlls', {
+            }))
+
+            vim.lsp.config("yamlls", vim.tbl_deep_extend("force", base, {
                 cmd = { "yaml-language-server", "--stdio" },
                 filetypes = { "yaml" },
                 settings = {
@@ -174,10 +82,14 @@ return {
                             ["https://json.schemastore.org/github-action.json"] = ".github/action.yml",
                             ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = { ".gitlab-ci.yml", "ci/*.yml" },
                             ["kubernetes"] = "kubernetes/**/*.yaml",
-                        }
-                    }
-                }
-            })
-        end
-    }
+                        },
+                    },
+                },
+            }))
+
+            -- Required in Neovim 0.11+: vim.lsp.config() declares, vim.lsp.enable() starts
+            local extra = { "gopls", "tailwindcss", "ansiblels", "yamlls" }
+            vim.lsp.enable(vim.list_extend(vim.deepcopy(servers), extra))
+        end,
+    },
 }

@@ -1,8 +1,8 @@
-autocmd BufRead,BufNewFile */playbooks/*.yml,*/playbooks/*.yaml set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */handlers/*.yml,*/handlers/*.yaml set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */tasks/*.yml,*/tasks/*.yaml set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */templates/*.yml,*/templates/*.yaml set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */vars/*.yml,*/vars/*.yaml set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */host_vars/* set filetype=yaml.ansible
-autocmd BufRead,BufNewFile */group_vars/* set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/playbooks/*.yml,*ansible*/playbooks/*.yaml set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/handlers/*.yml,*ansible*/handlers/*.yaml set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/tasks/*.yml,*ansible*/tasks/*.yaml set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/templates/*.yml.j2,*ansible*/templates/*.yaml.j2 set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/vars/*.yml,*ansible*/vars/*.yaml set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/host_vars/* set filetype=yaml.ansible
+autocmd BufRead,BufNewFile *ansible*/group_vars/* set filetype=yaml.ansible
 
