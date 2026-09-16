@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 directories=(
     "$HOME/"
-    "$HOME/work"
-    "$HOME/personal"
-    "$HOME/Documents/Projects"
     "$HOME/Documents/Ciops"
+    "$HOME/Documents/Projects"
+    "$HOME/personal"
+    "$HOME/src"
+    "$HOME/work"
+    "$HOME/work/idm"
+    "$HOME/work/it"
+    "$HOME/work/it/it-cloud"
+    "$HOME/work/ldap"
+    "$HOME/work/serv"
 )
 
 switch_to(){

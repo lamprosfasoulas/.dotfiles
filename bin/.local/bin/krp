@@ -15,19 +15,18 @@ if [[ -z $context ]]; then
     exit 1
 fi
 
-if contextRequiresProxy "$context" && notInMngmSubnet && proxyNotEnabled; then
-        logError "No Proxy Enabled"
-        exit 1
-fi
-
-if contextRequiresProxy "$context"; then
-    proxyHost=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f1)
-    proxyPort=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f2)
-    if ! nc -z "$proxyHost" "$proxyPort" &> /dev/null; then
-        logError "Proxy Unreachable"
-        exit 1
-    fi
-fi
+#if contextRequiresProxy "$context" && notInMngmSubnet && proxyNotEnabled; then
+#        logError "No Proxy Enabled"
+#    if contextRequiresProxy "$context"; then
+#        proxyHost=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f1)
+#        proxyPort=$(echo "$http_proxy" | cut -d/ -f3 | cut -d: -f2)
+#        if ! nc -z "$proxyHost" "$proxyPort" &> /dev/null; then
+#            logError "Proxy Unreachable"
+#            exit 1
+#        fi
+#    fi
+#    exit 1
+#fi
 
 # selectedNamespace=$(fzf <<< "${namespaces[@]}")
 selectedNamespace=$(fzf \
@@ -48,7 +47,7 @@ if [[ -z $selectedContainer ]]; then
     exit 1
 fi
 
-image=$(getImage "$selectedContainer")
+image=$(getImage "$selectedContainer" "$context")
 
 # getOptions export variables that will be
 # interpolated in the init script for each
@@ -68,6 +67,9 @@ cmd=(kubectl
     --rm -it
     --restart=Never
     --context "$context"
+    --overrides='
+    {"metadata":{"annotations":{"fluentbit.io/exclude": "true"}}}
+    '
 )
 
 if [[ -n $command ]]; then

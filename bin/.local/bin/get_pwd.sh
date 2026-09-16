@@ -7,5 +7,5 @@ if [[ -z $selected ]]; then
     exit 0
 fi
 
-gpg -d --no-symkey-cache "$selected" & while true; do sleep 1; done
-# echo ""
+gpg -d --no-symkey-cache "$selected"
+read -r _

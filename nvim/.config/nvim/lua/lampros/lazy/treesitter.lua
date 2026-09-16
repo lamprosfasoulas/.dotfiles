@@ -5,7 +5,7 @@ return {
     build = ":TSUpdate",
     config = function()
         require("nvim-treesitter").setup({
-            ensure_installed = { "svelte", "javascript", "typescript", "html", "css" },
+            ensure_installed = { "svelte", "javascript", "typescript", "html", "css", "rust" },
         })
 
         vim.api.nvim_create_autocmd('FileType', {

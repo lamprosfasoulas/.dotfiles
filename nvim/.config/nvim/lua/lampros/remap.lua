@@ -1,3 +1,5 @@
+local custom = require("lampros.custom")
+
 local keymap = vim.keymap
 local cmd = vim.cmd
 vim.g.mapleader = " "
@@ -38,9 +40,18 @@ keymap.set("n","<leader>x","<cmd>!chmod +x %<CR>",{silent = true})
 keymap.set("n","<leader><leader>l",":source %<CR>")
 keymap.set("n","<leader>l",":.lua<CR>")
 keymap.set("v","<leader>l",":lua<CR>")
+
+keymap.set("n", "<leader>k", function()
+    vim.api.nvim_feedkeys(":!kubectl ", "n", false)
+end, { noremap = true, silent = true })
 keymap.set('n','<leader>ts', function()
     vim.cmd('vnew')
     vim.bo.buftype = 'nofile'
     vim.bo.bufhidden = 'wipe'
     vim.bo.swapfile = false
 end, { desc = 'Open Scratch Buffer' })
+
+keymap.set("v", "<leader>vd", function()
+    vim.cmd("normal! \27")
+    custom.vault.decrypt_vault_selection()
+end, { desc = "Decrypt Ansible Vault" })

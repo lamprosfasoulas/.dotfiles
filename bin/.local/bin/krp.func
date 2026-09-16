@@ -1,5 +1,72 @@
 #!/bin/bash
 
+getContexts() {
+    kubectl config get-contexts -o name --no-headers
+}
+
+getNamespaces() {
+    local namespaces
+    namespaces=$(kubectl get namespace \
+        --output name \
+        --context "$context" \
+        | cut -d '/' -f2)
+    printf "%s\n" "${namespaces[@]}"
+}
+
+getContainers() {
+    local images=(
+        "alpine"
+        "mysql"
+        "myloader"
+        "openldap"
+        "maven"
+        "jjs"
+        "build-wso2"
+    )
+    printf "%s\n" "${images[@]}"
+}
+
+getImage() {
+    local image=$1
+    local context=$2
+    if [[ "$context" == *112* ]]; then
+    prefix="dockerhub-proxy.it.auth.gr/library/"
+    fi
+    case "$image" in
+        mysql)
+            echo "${prefix}mysql:8.0"
+            return 0
+            ;;
+        openldap)
+            echo "registry3.it.auth.gr/ciops/openldap-auth:latest"
+            return 0
+            ;;
+        build-wso2)
+            echo "registry3.it.auth.gr/ciops/jarwso2compile:0.1"
+            return 0
+            ;;
+        *)
+            echo "${prefix}alpine:3.23"
+            return 0
+            ;;
+    esac
+}
+
+getImageInitCommand() {
+    local image=$1
+    envsubst <<< "$(
+        cat "$HOME/.local/bin/${image}_init" 2> /dev/null
+    )"
+
+    # case "$image" in
+    #     myloader)
+    #         cat ~/.local/bin/myloader_init
+    #         ;;
+    #     *)
+    #         ;;
+    # esac
+}
+
 contextRequiresProxy() {
     local cluster=$1
     if [[ -z $cluster ]]; then
@@ -33,66 +100,8 @@ proxyNotEnabled() {
     [[ -z $https_proxy ]]
 }
 
-getContexts() {
-    kubectl config get-contexts -o name --no-headers
-}
-
-getContainers() {
-    local images=(
-        "alpine"
-        "mysql"
-        "myloader"
-        "openldap"
-        "maven"
-        "jjs"
-    )
-    printf "%s\n" "${images[@]}"
-}
-
 getContainersFromContext() {
     cut -d/ -f2 < <(kubectl get pods -n "$selectedNamespace" -o name --context "$context")
-}
-
-getNamespaces() {
-    local namespaces
-    namespaces=$(kubectl get namespace \
-        --output name \
-        --context "$context" \
-        | cut -d '/' -f2)
-    printf "%s\n" "${namespaces[@]}"
-}
-
-getImage() {
-    local image=$1
-    case "$image" in
-        mysql)
-            echo "dockerhub-proxy.it.auth.gr/library/mysql:8.0"
-            return 0
-            ;;
-        openldap)
-            echo "registry3.it.auth.gr/ciops/openldap-auth:latest"
-            return 0
-            ;;
-        *)
-            echo "dockerhub-proxy.it.auth.gr/library/alpine:3.23"
-            return 0
-            ;;
-    esac
-}
-
-getImageInitCommand() {
-    local image=$1
-    envsubst <<< "$(
-        cat "$HOME/.local/bin/${image}_init" 2> /dev/null
-    )"
-
-    # case "$image" in
-    #     myloader)
-    #         cat ~/.local/bin/myloader_init
-    #         ;;
-    #     *)
-    #         ;;
-    # esac
 }
 
 getOptions() {

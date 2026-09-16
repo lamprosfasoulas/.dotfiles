@@ -1,6 +1,10 @@
 local opt = vim.opt
 
 opt.guicursor = ""
+opt.cursorline = true
+opt.exrc = true
+-- opt.cursorlineopt = "number"
+
 opt.nu = true
 opt.relativenumber = true
 

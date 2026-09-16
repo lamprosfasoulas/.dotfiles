@@ -21,6 +21,16 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         config = function()
+            -- LSP servers (rust-analyzer in particular) can get stuck in a panic
+            -- loop and spam stderr, ballooning lsp.log to gigabytes since Neovim
+            -- doesn't rotate it. Truncate it on startup if it's gotten too big.
+            local log_path = vim.lsp.log.get_filename()
+            local max_size = 20 * 1024 * 1024 -- 20MB
+            local stat = vim.uv.fs_stat(log_path)
+            if stat and stat.size > max_size then
+                vim.fn.writefile({}, log_path)
+            end
+
             local capabilities = require("blink.cmp").get_lsp_capabilities()
 
             local on_attach = function(_, bufnr)
@@ -63,10 +73,10 @@ return {
                 settings = {
                     ansible = {
                         ansible = {
-                            path = "~/work/it-ansible/ansible.venv/bin/ansible",
+                            path = "~/work/it/it-ansible/ansible.venv/bin/ansible",
                         },
                         python = {
-                            activationScript = "~/work/it-ansible/ansible.venv/bin/activate",
+                            activationScript = "~/work/it/it-ansible/ansible.venv/bin/activate",
                         },
                     },
                 },
