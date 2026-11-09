@@ -43,11 +43,31 @@ alias k2='kubectl --context oidc@prod-2'
 alias kc='kubectl config'
 alias kd='kubectl describe'
 
-complete -F __start_kubectl k
-complete -F __start_kubectl k112
-complete -F __start_kubectl k2
-complete -F __start_kubectl kc
-complete -F __start_kubectl kd
+_kube_alias() {
+    local orig0=${COMP_WORDS[0]}
+    local -a extra=()
+    case $orig0 in 
+        k112) extra=(--context oidc@prod-112) ;;
+        k2) extra=(--context oidc@prod-2) ;;
+        kc) extra=(config) ;;
+        kd) extra=(describe) ;;
+    esac
+
+    local rest=${COMP_LINE#"$orig0"}
+    local newprefix="kubectl ${extra[*]}"
+    newprefix=${newprefix% }
+
+    COMP_WORDS=(kubectl "${extra[@]}" "${COMP_WORDS[@]:1}")
+    (( COMP_CWORD += ${#extra[@]} ))
+    COMP_LINE="$newprefix$rest"
+    (( COMP_POINT += ${#newprefix} - ${#orig0} ))
+
+    __start_kubectl kubectl
+}
+
+for a in k k112 k2 kc kd; do 
+    complete -o default -F _kube_alias "$a"
+done
 
 alias calicoctl='calicoctl --allow-version-mismatch'
 alias t='talosctl'
