@@ -1,12 +1,22 @@
+LOCAL_PROXY=socks5://127.0.0.1:1080
+
 notify(){
     local title="Ghostty"
     local message="$*"
     printf '\033Ptmux;\033\033]777;notify;%s;%s\033\\' "${title}" "${message}"
 }
 
-curljq() {
-    curl "$@" | jq
-}
+curljq() { curl "$@" | jq; }
+
+__need_bastion() { ip -4 -o addr show | awk '{split($4,a,"/"); print a[1]}' | grep -qF 155.207.112.204; }
+# This is used by ssh config as well in $HOME/.ssh/config
+export -f __need_bastion
+
+__proxy() { __need_bastion || echo "$LOCAL_PROXY"; }
+
+flux() { https_proxy=$(__proxy) command flux "$@"; }
+k9s() { https_proxy=$(__proxy) command k9s "$@"; }
+kubectl() { https_proxy=$(__proxy) command kubectl "$@"; }
 
 alias vim=nvim
 alias ivm=nvim
@@ -44,6 +54,17 @@ alias kc='kubectl config'
 alias kd='kubectl describe'
 
 _kube_alias() {
+    local dir=$HOME/.kube/columns
+
+    local before=${COMP_LINE:0:COMP_POINT}
+    if [[ $before =~ custom-columns-file=([^[:space:]]*)$ ]]; then
+        local typed=${BASH_REMATCH[1]}
+        case $typed in
+            /*|.*) mapfile -t COMPREPLY < <(compgen -f -- "$typed") ;;
+            *)     mapfile -t COMPREPLY < <(compgen -f -- "$dir/$typed") ;;
+        esac
+        return
+    fi
     local orig0=${COMP_WORDS[0]}
     local -a extra=()
     case $orig0 in 

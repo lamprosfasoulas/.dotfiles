@@ -1,4 +1,4 @@
-local custom = require("lampros.custom")
+-- local custom = require("lampros.custom")
 
 local keymap = vim.keymap
 local cmd = vim.cmd
@@ -36,6 +36,10 @@ keymap.set("x","<leader>p",[["_dP]])
 
 keymap.set("n","<leader>x","<cmd>!chmod +x %<CR>",{silent = true})
 
+-- CMD maps
+keymap.set('c', '<M-f>', '<S-Right>')
+keymap.set('c', '<M-b>', '<S-Left>')
+
 -- Lua Exec Remaps
 keymap.set("n","<leader><leader>l",":source %<CR>")
 keymap.set("n","<leader>l",":.lua<CR>")
@@ -50,8 +54,3 @@ keymap.set('n','<leader>ts', function()
     vim.bo.bufhidden = 'wipe'
     vim.bo.swapfile = false
 end, { desc = 'Open Scratch Buffer' })
-
-keymap.set("v", "<leader>vd", function()
-    vim.cmd("normal! \27")
-    custom.vault.decrypt_vault_selection()
-end, { desc = "Decrypt Ansible Vault" })

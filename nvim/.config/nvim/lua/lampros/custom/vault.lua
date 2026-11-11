@@ -1,8 +1,9 @@
 local M = {}
 
 -- Adjust these two to your actual paths
-local ANSIBLE_VAULT = vim.fn.expand("/Users/lampros/work/it/it-ansible/ansible.venv/bin/ansible-vault")
-local VAULT_PASS_FILE = vim.fn.expand("/Users/lampros/work/it/it-ansible/.vault")
+local root = vim.fn.getcwd()
+local ANSIBLE_VAULT = root .. "/ansible.venv/bin/ansible-vault"
+local VAULT_PASS_FILE = root .. "/it/it-ansible/.vault"
 
 function M.decrypt_vault_selection()
   local start_line = vim.fn.line("'<")
